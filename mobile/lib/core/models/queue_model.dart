@@ -26,6 +26,16 @@ class QueueModel {
     this.updatedAt,
   });
 
+  /// Nombre de tickets actifs estimés
+  List<int> get activeTickets {
+    // Retourner une liste des numéros de tickets actuellement actifs
+    if (currentNumber == 0) return [];
+    return List<int>.generate(
+      (currentNumber - nextNumber).abs() + 1,
+      (i) => nextNumber + i,
+    );
+  }
+
   /// Copie avec modifications
   QueueModel copyWith({
     String? id,

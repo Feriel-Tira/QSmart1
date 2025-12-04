@@ -1,7 +1,7 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:smartqueue/core/models/queue_model.dart';
 import 'package:smartqueue/core/models/ticket_model.dart';
-import 'package:smartqueue/core/services/error_handler.dart';
+import 'package:smartqueue/core/services/error_handler.dart' as custom_error_handler;
 
 /// Repository pour gérer les opérations liées aux files d'attente
 class QueueRepository {
@@ -36,11 +36,11 @@ class QueueRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null) {
-        throw const AppException(
+        throw custom_error_handler.AppException(
           message: 'Aucune file d\'attente disponible',
           code: 'NO_QUEUES',
         );
@@ -51,7 +51,7 @@ class QueueRepository {
           .map((queue) => QueueModel.fromJson(queue as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -97,11 +97,11 @@ class QueueRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null || result.data!['queue'] == null) {
-        throw const AppException(
+        throw custom_error_handler.AppException(
           message: 'File d\'attente non trouvée',
           code: 'QUEUE_NOT_FOUND',
         );
@@ -111,7 +111,7 @@ class QueueRepository {
         result.data!['queue'] as Map<String, dynamic>,
       );
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -143,11 +143,11 @@ class QueueRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null || result.data!['createTicket'] == null) {
-        throw const AppException(
+        throw custom_error_handler.AppException(
           message: 'Erreur lors de la création du ticket',
           code: 'CREATE_TICKET_ERROR',
         );
@@ -157,7 +157,7 @@ class QueueRepository {
         result.data!['createTicket'] as Map<String, dynamic>,
       );
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -186,7 +186,7 @@ class QueueRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null) {
@@ -195,7 +195,7 @@ class QueueRepository {
 
       return result.data!['queueStats'] as Map<String, dynamic>;
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -250,11 +250,11 @@ class QueueRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null || result.data!['updateQueue'] == null) {
-        throw const AppException(
+        throw custom_error_handler.AppException(
           message: 'Erreur lors de la mise à jour de la file',
           code: 'UPDATE_QUEUE_ERROR',
         );
@@ -264,7 +264,7 @@ class QueueRepository {
         result.data!['updateQueue'] as Map<String, dynamic>,
       );
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 }

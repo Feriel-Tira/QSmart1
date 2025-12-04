@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:smartqueue/core/models/user_model.dart';
 import 'package:smartqueue/features/auth/bloc/auth_bloc.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -95,7 +96,7 @@ class ProfilePage extends StatelessWidget {
                           context,
                           icon: Icons.badge_outlined,
                           label: 'Rôle',
-                          value: user.role,
+                          value: user.role.toDisplayString(),
                         ),
                       ],
                     ),

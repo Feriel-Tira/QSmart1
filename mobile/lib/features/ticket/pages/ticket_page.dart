@@ -23,10 +23,7 @@ class _TicketPageState extends State<TicketPage> {
     super.initState();
     // Load ticket details
     context.read<TicketBloc>().add(
-      LoadTicketDetailRequested(
-        ticketId: widget.ticketId,
-        queueId: widget.queueId,
-      ),
+      LoadTicketDetailRequested(widget.ticketId),
     );
   }
 
@@ -65,10 +62,7 @@ class _TicketPageState extends State<TicketPage> {
                   ElevatedButton(
                     onPressed: () {
                       context.read<TicketBloc>().add(
-                        LoadTicketDetailRequested(
-                          ticketId: widget.ticketId,
-                          queueId: widget.queueId,
-                        ),
+                        LoadTicketDetailRequested(widget.ticketId),
                       );
                     },
                     child: const Text('Réessayer'),
@@ -125,13 +119,13 @@ class _TicketPageState extends State<TicketPage> {
                     vertical: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: _getStatusBackgroundColor(ticket.status),
+                    color: _getStatusBackgroundColor(ticket.status.toShortString()),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    ticket.status.toUpperCase(),
+                    ticket.status.toDisplayString(),
                     style: TextStyle(
-                      color: _getStatusTextColor(ticket.status),
+                      color: _getStatusTextColor(ticket.status.toShortString()),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -158,7 +152,7 @@ class _TicketPageState extends State<TicketPage> {
                 _buildInfoRow(
                   context,
                   label: 'Utilisateur',
-                  value: ticket.userName,
+                  value: ticket.userName ?? 'Utilisateur',
                   icon: Icons.person_outline,
                 ),
                 const SizedBox(height: 12),
@@ -193,7 +187,7 @@ class _TicketPageState extends State<TicketPage> {
                       onPressed: () {
                         _showCancelDialog(context, ticket.id);
                       },
-                      icon: const Icon(Icons.cancel_outline),
+                      icon: const Icon(Icons.close),
                       label: const Text('Annuler le Ticket'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
@@ -212,7 +206,7 @@ class _TicketPageState extends State<TicketPage> {
           const SizedBox(height: 32),
 
           // Info Message
-          if (ticket.status.toLowerCase() == 'waiting')
+          if (ticket.status == TicketStatus.waiting)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Container(
@@ -332,7 +326,7 @@ class _TicketPageState extends State<TicketPage> {
             onPressed: () {
               Navigator.pop(context);
               context.read<TicketBloc>().add(
-                CancelTicketRequested(ticketId: ticketId),
+                CancelTicketRequested(ticketId),
               );
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(

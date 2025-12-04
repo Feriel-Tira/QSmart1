@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final ThemeData lightTheme = ThemeData(
+    // Use a system font to avoid remote Google Fonts fetch in Web builds
+    fontFamily: 'Arial',
     primarySwatch: Colors.blue,
     primaryColor: Color(0xFF2196F3),
     colorScheme: ColorScheme.light(
@@ -16,7 +18,7 @@ class AppTheme {
       centerTitle: true,
       iconTheme: IconThemeData(color: Colors.white),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -47,6 +49,8 @@ class AppTheme {
   );
 
   static final ThemeData darkTheme = ThemeData(
+    // Ensure consistent font on dark theme as well
+    fontFamily: 'Arial',
     primarySwatch: Colors.blue,
     primaryColor: Color(0xFF2196F3),
     brightness: Brightness.dark,
@@ -55,7 +59,7 @@ class AppTheme {
       backgroundColor: Color(0xFF1E1E1E),
       elevation: 0,
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),

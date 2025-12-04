@@ -103,3 +103,23 @@ enum UserRole {
   operator,  // Opérateur de queue
   admin,     // Administrateur
 }
+
+/// Extension methods for UserRole
+extension UserRoleExtension on UserRole {
+  /// Convertir en string
+  String toShortString() {
+    return toString().split('.').last;
+  }
+
+  /// Afficher le rôle en français
+  String toDisplayString() {
+    switch (this) {
+      case UserRole.user:
+        return 'Utilisateur';
+      case UserRole.operator:
+        return 'Opérateur';
+      case UserRole.admin:
+        return 'Administrateur';
+    }
+  }
+}

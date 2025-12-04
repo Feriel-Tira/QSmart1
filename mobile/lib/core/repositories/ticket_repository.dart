@@ -1,6 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:smartqueue/core/models/ticket_model.dart';
-import 'package:smartqueue/core/services/error_handler.dart';
+import 'package:smartqueue/core/services/error_handler.dart' as custom_error_handler;
 
 /// Repository pour gérer les opérations liées aux tickets
 class TicketRepository {
@@ -37,7 +37,7 @@ class TicketRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null) {
@@ -53,7 +53,7 @@ class TicketRepository {
           .map((ticket) => TicketModel.fromJson(ticket as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -92,11 +92,11 @@ class TicketRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null || result.data!['ticket'] == null) {
-        throw const AppException(
+        throw custom_error_handler.AppException(
           message: 'Ticket non trouvé',
           code: 'TICKET_NOT_FOUND',
         );
@@ -106,7 +106,7 @@ class TicketRepository {
         result.data!['ticket'] as Map<String, dynamic>,
       );
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -140,11 +140,11 @@ class TicketRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null || result.data!['cancelTicket'] == null) {
-        throw const AppException(
+        throw custom_error_handler.AppException(
           message: 'Erreur lors de l\'annulation du ticket',
           code: 'CANCEL_TICKET_ERROR',
         );
@@ -154,7 +154,7 @@ class TicketRepository {
         result.data!['cancelTicket'] as Map<String, dynamic>,
       );
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -184,7 +184,7 @@ class TicketRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null) {
@@ -200,7 +200,7 @@ class TicketRepository {
           .map((ticket) => TicketModel.fromJson(ticket as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -237,7 +237,7 @@ class TicketRepository {
       );
 
       if (result.hasException) {
-        throw ErrorHandler.handleGraphQLException(result.exception!);
+        throw custom_error_handler.AppException(message: "GraphQL Error", originalException: result.exception);
       }
 
       if (result.data == null) {
@@ -253,7 +253,7 @@ class TicketRepository {
           .map((ticket) => TicketModel.fromJson(ticket as Map<String, dynamic>))
           .toList();
     } catch (e) {
-      throw ErrorHandler.handleError(e);
+      throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
     }
   }
 
@@ -283,10 +283,10 @@ class TicketRepository {
       return result
           .map((event) {
             if (event.hasException) {
-              throw ErrorHandler.handleGraphQLException(event.exception!);
+              throw custom_error_handler.AppException(message: "GraphQL Error", originalException: event.exception);
             }
             if (event.data == null || event.data!['ticketStatusChanged'] == null) {
-              throw const AppException(
+              throw custom_error_handler.AppException(
                 message: 'Erreur lors de la réception du statut du ticket',
                 code: 'SUBSCRIPTION_ERROR',
               );
@@ -296,10 +296,10 @@ class TicketRepository {
             );
           })
           .handleError((e) {
-            throw ErrorHandler.handleError(e);
+            throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
           });
     } catch (e) {
-      return Stream.error(ErrorHandler.handleError(e));
+      return Stream.error(custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?));
     }
   }
 
@@ -327,10 +327,10 @@ class TicketRepository {
       return result
           .map((event) {
             if (event.hasException) {
-              throw ErrorHandler.handleGraphQLException(event.exception!);
+              throw custom_error_handler.AppException(message: "GraphQL Error", originalException: event.exception);
             }
             if (event.data == null || event.data!['queueUpdated'] == null) {
-              throw const AppException(
+              throw custom_error_handler.AppException(
                 message: 'Erreur lors de la réception des mises à jour de file',
                 code: 'SUBSCRIPTION_ERROR',
               );
@@ -338,10 +338,10 @@ class TicketRepository {
             return event.data!['queueUpdated'] as Map<String, dynamic>;
           })
           .handleError((e) {
-            throw ErrorHandler.handleError(e);
+            throw custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?);
           });
     } catch (e) {
-      return Stream.error(ErrorHandler.handleError(e));
+      return Stream.error(custom_error_handler.AppException(message: e.toString(), originalException: e as Exception?));
     }
   }
 }

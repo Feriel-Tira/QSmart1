@@ -6,6 +6,7 @@ class TicketModel {
   final String ticketNumber; // Format: YYMMDD-XXXXX
   final String queueId;
   final String userId;
+  final String? userName; // Aggiunto il nome dell'utente
   final TicketStatus status;
   final int priority;
   final DateTime createdAt;
@@ -19,6 +20,7 @@ class TicketModel {
     required this.ticketNumber,
     required this.queueId,
     required this.userId,
+    this.userName,
     required this.status,
     required this.priority,
     required this.createdAt,
@@ -37,12 +39,13 @@ class TicketModel {
   /// Vérifier si le ticket est expiré
   bool get isExpired => expiredAt != null && DateTime.now().isAfter(expiredAt!);
 
-  /// Copie avec modifications
+  /// Copie con modifiche
   TicketModel copyWith({
     String? id,
     String? ticketNumber,
     String? queueId,
     String? userId,
+    String? userName,
     TicketStatus? status,
     int? priority,
     DateTime? createdAt,
@@ -56,6 +59,7 @@ class TicketModel {
       ticketNumber: ticketNumber ?? this.ticketNumber,
       queueId: queueId ?? this.queueId,
       userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
       status: status ?? this.status,
       priority: priority ?? this.priority,
       createdAt: createdAt ?? this.createdAt,
@@ -73,6 +77,7 @@ class TicketModel {
       ticketNumber: json['ticketNumber'] ?? '',
       queueId: json['queueId'] ?? '',
       userId: json['userId'] ?? '',
+      userName: json['userName'],
       status: _parseStatus(json['status']),
       priority: json['priority'] ?? 0,
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
@@ -82,14 +87,14 @@ class TicketModel {
       updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
-
-  /// Convertir en JSON
+  
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'ticketNumber': ticketNumber,
       'queueId': queueId,
       'userId': userId,
+      'userName': userName,
       'status': status.toString().split('.').last,
       'priority': priority,
       'createdAt': createdAt.toIso8601String(),
@@ -129,4 +134,38 @@ enum TicketStatus {
   served,    // Servi/Traité
   cancelled, // Annulé
   expired,   // Expiré
+}
+
+/// Extension methods pour TicketStatus
+extension TicketStatusExtension on TicketStatus {
+  /// Convertir en string
+  String toShortString() {
+    return toString().split('.').last;
+  }
+
+  /// Convertir en majuscules
+  String toUpperCase() {
+    return toShortString().toUpperCase();
+  }
+
+  /// Convertir en minuscules
+  String toLowerCase() {
+    return toShortString().toLowerCase();
+  }
+
+  /// Afficher le statut en français
+  String toDisplayString() {
+    switch (this) {
+      case TicketStatus.waiting:
+        return 'En attente';
+      case TicketStatus.called:
+        return 'Appelé';
+      case TicketStatus.served:
+        return 'Servi';
+      case TicketStatus.cancelled:
+        return 'Annulé';
+      case TicketStatus.expired:
+        return 'Expiré';
+    }
+  }
 }

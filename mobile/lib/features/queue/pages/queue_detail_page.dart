@@ -19,9 +19,8 @@ class _QueueDetailPageState extends State<QueueDetailPage> {
   @override
   void initState() {
     super.initState();
-    // Load queue details
     context.read<QueueBloc>().add(
-      LoadQueueDetailRequested(queueId: widget.queueId),
+      LoadQueueDetailRequested(widget.queueId),
     );
   }
 
@@ -60,7 +59,7 @@ class _QueueDetailPageState extends State<QueueDetailPage> {
                   ElevatedButton(
                     onPressed: () {
                       context.read<QueueBloc>().add(
-                        LoadQueueDetailRequested(queueId: widget.queueId),
+                        LoadQueueDetailRequested(widget.queueId),
                       );
                     },
                     child: const Text('Réessayer'),
@@ -178,7 +177,10 @@ class _QueueDetailPageState extends State<QueueDetailPage> {
               child: ElevatedButton.icon(
                 onPressed: () {
                   context.read<QueueBloc>().add(
-                    CreateTicketRequested(queueId: queue.id),
+                    CreateTicketRequested(
+                      queueId: queue.id,
+                      userId: 'current_user_id',  // TODO: Replace with actual user ID
+                    ),
                   );
                 },
                 icon: const Icon(Icons.add),
@@ -237,7 +239,7 @@ class _QueueDetailPageState extends State<QueueDetailPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               itemCount: queue.activeTickets.length,
               itemBuilder: (context, index) {
-                final ticket = queue.activeTickets[index];
+                final ticketNumber = queue.activeTickets[index];
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
                   child: Padding(
@@ -249,7 +251,7 @@ class _QueueDetailPageState extends State<QueueDetailPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Ticket #${ticket.ticketNumber}',
+                              'Ticket #$ticketNumber',
                               style:
                                   Theme.of(context).textTheme.titleMedium?.copyWith(
                                         fontWeight: FontWeight.bold,
@@ -261,47 +263,17 @@ class _QueueDetailPageState extends State<QueueDetailPage> {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: _getStatusColor(ticket.status),
+                                color: _getStatusColor('Waiting'),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Text(
-                                ticket.status,
-                                style: const TextStyle(
+                              child: const Text(
+                                'En attente',
+                                style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.person_outline,
-                              size: 18,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              ticket.userName,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.schedule,
-                              size: 18,
-                              color: Colors.grey[600],
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Depuis ${_formatTime(ticket.createdAt)}',
-                              style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),

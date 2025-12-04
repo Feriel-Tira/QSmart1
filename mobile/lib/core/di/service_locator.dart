@@ -25,11 +25,11 @@ Future<void> setupServiceLocator() async {
     AuthService(),
   );
 
-  // Initialiser GraphQL avec les services disponibles
+  // Initializzare GraphQL con i servizi disponibili
   await GraphQLConfiguration.initialize();
   
-  // Obtenir le client GraphQL
-  final graphQLClient = GraphQLConfiguration.client;
+  // Ottenere il client GraphQL
+  final graphQLClient = GraphQLConfiguration.graphQLClient;
 
   // Repositories
   getIt.registerSingleton<AuthRepository>(

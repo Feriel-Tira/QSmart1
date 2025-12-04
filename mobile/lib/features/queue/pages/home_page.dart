@@ -212,7 +212,10 @@ class QueueCard extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () {
                     context.read<QueueBloc>().add(
-                      CreateTicketRequested(queueId: queue.id),
+                      CreateTicketRequested(
+                        queueId: queue.id,
+                        userId: 'current_user_id',  // TODO: Get from auth
+                      ),
                     );
                   },
                   icon: const Icon(Icons.add),

@@ -25,13 +25,6 @@ class GraphQLConfiguration {
       getToken: () async {
         return await _authService.getAuthorizationHeader();
       },
-      // Gestion des erreurs d'authentification
-      onException: (HttpLinkServerException exception) async {
-        if (exception.statusCode == 401) {
-          // Token expiré ou invalide - logout
-          await _authService.clearAll();
-        }
-      },
     );
 
     // Combiner les links
@@ -68,21 +61,11 @@ class GraphQLConfiguration {
     }
   }
 
-  /// Getter pour le client GraphQL
-  static ValueNotifier<GraphQLClient> get client {
-    if (_client == null) {
-      throw Exception('GraphQL Client not initialized. Call initialize() first.');
-    }
-    return _client;
-  }
+  /// Getter per il client GraphQL
+  static ValueNotifier<GraphQLClient> get client => _client;
 
-  /// Getter pour le service d'auth
-  static AuthService get authService {
-    if (_authService == null) {
-      throw Exception('AuthService not initialized. Call initialize() first.');
-    }
-    return _authService;
-  }
+  /// Getter per il servizio GraphQL diretto
+  static GraphQLClient get graphQLClient => _client.value;
 
   /// Réinitialiser le client (utile après logout)
   static Future<void> reinitialize() async {
